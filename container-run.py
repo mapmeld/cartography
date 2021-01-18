@@ -82,6 +82,7 @@ print('training model...')
 system("python -m cartography.classification.run_glue \
     --config myconfig.jsonnet \
     --do_train \
+    --overwrite_cache \
     --output_dir ./xo \
     --text_a \"" + args.text_a + "\" \
     --text_b no_b_value \

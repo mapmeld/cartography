@@ -569,7 +569,7 @@ def load_and_cache_examples(args, task, tokenizer, evaluate=False, data_split="t
                 pad_token=tokenizer.pad_token_id,
                 pad_token_segment_id=tokenizer.pad_token_type_id,)
         else:
-            features = convert_examples_to_features(
+            features, known_classes = convert_examples_to_features(
                 examples,
                 tokenizer,
                 label_list=label_list,
@@ -601,7 +601,7 @@ def load_and_cache_examples(args, task, tokenizer, evaluate=False, data_split="t
         all_labels = torch.tensor([f.label for f in features], dtype=torch.float)
 
     dataset = TensorDataset(all_input_ids, all_attention_mask, all_token_type_ids, all_labels, all_example_ids)
-    return dataset
+    return dataset, known_classes
 
 
 def run_transformer(args):
@@ -668,15 +668,22 @@ def run_transformer(args):
 
     args.model_type = args.model_type.lower()
     config_class, model_class, tokenizer_class = MODEL_CLASSES[args.model_type]
+
+    tokenizer = tokenizer_class.from_pretrained(
+        args.tokenizer_name if args.tokenizer_name else args.model_name_or_path,
+        do_lower_case=args.do_lower_case,
+        cache_dir=args.cache_dir if args.cache_dir else None,)
+
+    train_dataset, known_classes = load_and_cache_examples(args, tname, tokenizer, evaluate=False)
+    if len(known_classes.keys()) > 0:
+        num_labels = len(known_classes.keys())
+
     config = config_class.from_pretrained(
         args.config_name if args.config_name else args.model_name_or_path,
         num_labels=num_labels,
         finetuning_task=tname,
         cache_dir=args.cache_dir if args.cache_dir else None,)
-    tokenizer = tokenizer_class.from_pretrained(
-        args.tokenizer_name if args.tokenizer_name else args.model_name_or_path,
-        do_lower_case=args.do_lower_case,
-        cache_dir=args.cache_dir if args.cache_dir else None,)
+
     model = model_class.from_pretrained(
         args.model_name_or_path,
         from_tf=bool(".ckpt" in args.model_name_or_path),
@@ -705,9 +712,6 @@ def run_transformer(args):
             os.makedirs(args.output_dir)
             save_args_to_file(args, mode="train")
 
-        train_dataset, known_classes = load_and_cache_examples(args, tname, tokenizer, evaluate=False)
-        if args.task_name == "CLASSIFICATION":
-            model.config.num_lanels = len(known_classes.keys())
         global_step, tr_loss = train(args, train_dataset, model, tokenizer)
         logger.info(f" global_step = {global_step}, average loss = {tr_loss:.4f}")
 
@@ -802,6 +806,7 @@ def main():
     parser.add_argument("--dataset")
     parser.add_argument("--label_field")
     parser.add_argument("--id_field")
+    parser.add_argument("--overwrite_cache")
 
     # TODO(SS): Automatically map tasks to OOD test sets.
 

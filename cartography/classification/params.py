@@ -146,9 +146,11 @@ class Params:
       self.server_port : str = configs.get("server_port", "")
 
       self.split : str = configs.get("split", "")
-      self.text_a : str = configs.get("text_a", "")
-      self.text_b : str = configs.get("text_b", "")
+      self.text_a : str = configs.get("text_a", "text_a")
+      self.text_b : str = configs.get("text_b", "text_b")
       self.dataset_name : str = configs.get("dataset", "")
+      self.label_field : str = configs.get("label_field", "label")
+      self.id_field : str = configs.get("id_field", "uid")
 
 
 def save_args_to_file(params: Params, mode: str = ""):

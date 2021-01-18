@@ -485,6 +485,10 @@ def load_dataset(args, task, eval_split="train"):
     ds.rename_column_(args.text_a, "text_a")
     if args.text_b != "no_b_value":
         ds.rename_column_(args.text_b, "text_b")
+    if args.id_field != "uid":
+        ds.rename_column_(args.id_field, "uid")
+    if args.label_field != "label":
+        ds.rename_column_(args.label_field, "label")
     return ds
     #
     # processor = processors[task]()
@@ -794,6 +798,8 @@ def main():
     parser.add_argument("--text_b")
     parser.add_argument("--split")
     parser.add_argument("--dataset")
+    parser.add_argument("--label_field")
+    parser.add_argument("--id_field")
 
     # TODO(SS): Automatically map tasks to OOD test sets.
 

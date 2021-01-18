@@ -66,6 +66,7 @@ system("python -m cartography.classification.run_glue \
     --output_dir ./xo \
     --text_a " + args.text_a + " \
     --text_b " + args.text_b + " \
+    --dataset " + args.dataset + " \
     --split " + args.split)
 
 print('generating plot...')

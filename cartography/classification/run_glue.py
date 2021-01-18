@@ -479,9 +479,9 @@ def evaluate(args, model, tokenizer, prefix="", eval_split="dev"):
 
 
 def load_dataset(args, task, eval_split="train"):
-    ds = datasets.load_dataset(args.model_name_or_path, split=args.split)
-    ds.rename_column_("hypothesis", args.text_a)
-    ds.rename_column_("premise", args.text_b)
+    ds = datasets.load_dataset(args.dataset_name, split=args.split)
+    ds.rename_column_(args.text_a, "text_a")
+    ds.rename_column_(args.text_b, "text_b")
     return ds
     #
     # processor = processors[task]()
@@ -788,6 +788,7 @@ def main():
     parser.add_argument("--text_a")
     parser.add_argument("--text_b")
     parser.add_argument("--split")
+    parser.add_argument("--dataset")
 
     # TODO(SS): Automatically map tasks to OOD test sets.
 

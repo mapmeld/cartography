@@ -148,6 +148,7 @@ class Params:
       self.split : str = configs.get("split", "")
       self.text_a : str = configs.get("text_a", "")
       self.text_b : str = configs.get("text_b", "")
+      self.dataset_name : str = configs.get("dataset", "")
 
 
 def save_args_to_file(params: Params, mode: str = ""):

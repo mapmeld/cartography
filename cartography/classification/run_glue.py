@@ -667,7 +667,7 @@ def run_transformer(args):
     config = config_class.from_pretrained(
         args.config_name if args.config_name else args.model_name_or_path,
         num_labels=num_labels,
-        finetuning_task=args.task_name,
+        finetuning_task=tname,
         cache_dir=args.cache_dir if args.cache_dir else None,)
     tokenizer = tokenizer_class.from_pretrained(
         args.tokenizer_name if args.tokenizer_name else args.model_name_or_path,
@@ -701,7 +701,7 @@ def run_transformer(args):
             os.makedirs(args.output_dir)
             save_args_to_file(args, mode="train")
 
-        train_dataset = load_and_cache_examples(args, args.task_name, tokenizer, evaluate=False)
+        train_dataset = load_and_cache_examples(args, tname, tokenizer, evaluate=False)
         global_step, tr_loss = train(args, train_dataset, model, tokenizer)
         logger.info(f" global_step = {global_step}, average loss = {tr_loss:.4f}")
 
@@ -758,8 +758,8 @@ def run_transformer(args):
 
             if args.test and "diagnostic" in args.test:
                 # For running diagnostics with MNLI, run as SNLI and use hack.
-                evaluate_by_category(predictions[args.task_name],
-                                     mnli_hack=True if args.task_name in ["SNLI", "snli"] and "mnli" in args.output_dir else False,
+                evaluate_by_category(predictions[tname],
+                                     mnli_hack=True if tname in ["SNLI", "snli"] and "mnli" in args.output_dir else False,
                                      eval_filename=os.path.join(args.output_dir, f"eval_metrics_diagnostics.json"),
                                      diagnostics_file_carto=args.test)
     logger.info(" **** Done ****")

@@ -85,6 +85,8 @@ system("python -m cartography.classification.run_glue \
     --output_dir ./xo \
     --text_a \"" + args.text_a + "\" \
     --text_b no_b_value \
+    --id_field \"" + args.id_field + "\" \
+    --label_field \"" + args.label_field + "\" \
     --dataset " + args.dataset + " \
     --split " + args.split)
 

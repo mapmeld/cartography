@@ -143,7 +143,7 @@ def adapted_glue_convert_examples_to_features(
         else:
             raise KeyError(output_mode)
 
-        example_int_id = convert_string_to_unique_number(example['uid'][:10])
+        example_int_id = convert_string_to_unique_number(str(example['uid'])[:10])
         if ex_index < 5:
             logger.info("*** Example ***")
             logger.info(f"guid: {example_int_id}")

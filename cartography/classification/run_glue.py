@@ -648,10 +648,12 @@ def run_transformer(args):
 
     # Prepare GLUE task
     args.task_name = args.task_name.lower()
-    if args.task_name not in processors:
-        raise ValueError("Task not found: %s" % (args.task_name))
-    processor = processors[args.task_name]()
-    args.output_mode = output_modes[args.task_name]
+    tname = args.task_name
+    if tname not in processors:
+        tname = "mnli"
+        # raise ValueError("Task not found: %s" % (args.task_name))
+    processor = processors[tname]()
+    args.output_mode = output_modes[tname]
     label_list = processor.get_labels()
     num_labels = len(label_list)
 

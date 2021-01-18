@@ -19,6 +19,8 @@ parser = argparse.ArgumentParser(description='Load HuggingFace model and dataset
 parser.add_argument('--model', help='huggingface model path')
 parser.add_argument('--dataset', help='huggingface dataset path')
 parser.add_argument('--split', help='train, test, or other split')
+parser.add_argument('--id_field', help='name of id column in dataset', default="uid")
+parser.add_argument('--label_field', help='name of label column in dataset', default="label")
 parser.add_argument('--text_a', help='name of first text column in dataset', default="text_a")
 parser.add_argument('--text_b', help='name of second text column in dataset', default="text_b")
 parser.add_argument('--epochs', help='number of epochs', default=2)

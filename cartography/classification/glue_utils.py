@@ -96,6 +96,8 @@ def adapted_glue_convert_examples_to_features(
     label_map = {label: i for i, label in enumerate(label_list)}
 
     features = []
+    known_classes = {}
+    next_class_label = 0
     for (ex_index, example) in enumerate(examples):
         len_examples = 0
         if is_tf_dataset:
@@ -137,7 +139,10 @@ def adapted_glue_convert_examples_to_features(
         )
 
         if output_mode == "classification":
-            label = example['label']
+            if example['label'] not in known_classes:
+              known_classes[example['label']] = next_class_label
+              next_class_label += 1
+            label = known_classes[example['label']]
         elif output_mode == "regression":
             label = float(example['label'])
         else:

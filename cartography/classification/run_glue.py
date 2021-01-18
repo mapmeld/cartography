@@ -85,6 +85,8 @@ MODEL_CLASSES = {
     "bert_mc": (BertConfig, AdaptedBertForMultipleChoice, BertTokenizer),
     "roberta": (RobertaConfig, AdaptedRobertaForSequenceClassification, RobertaTokenizer),
     "roberta_mc": (RobertaConfig, AdaptedRobertaForMultipleChoice, RobertaTokenizer),
+    # todo - add albert, bart, distilbert, electra, mobilebert, t5, xlm, perhaps other common classification types
+    # requires only import above ^^ and custom forward() in cartography/classification/models.py
 }
 
 
@@ -481,7 +483,8 @@ def evaluate(args, model, tokenizer, prefix="", eval_split="dev"):
 def load_dataset(args, task, eval_split="train"):
     ds = datasets.load_dataset(args.dataset_name, split=args.split)
     ds.rename_column_(args.text_a, "text_a")
-    ds.rename_column_(args.text_b, "text_b")
+    if args.text_b != "no_b_value":
+        ds.rename_column_(args.text_b, "text_b")
     return ds
     #
     # processor = processors[task]()

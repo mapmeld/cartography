@@ -28,7 +28,7 @@ class Params:
 
       # The name of the task to train.
       self.task_name : str = configs["task_name"]
-      assert self.task_name.lower() in processors.keys()
+      # assert self.task_name.lower() in processors.keys()
 
       # Random seed for initialization.
       self.seed : int = configs["seed"]

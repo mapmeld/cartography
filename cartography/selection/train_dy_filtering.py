@@ -227,7 +227,7 @@ def write_filtered_data(args, train_dy_metrics):
           f"{args.metric} = {selected.iloc[idx][args.metric]:.4f}")
 
         selected_id = selected.iloc[idx]["guid"]
-        if args.task_name in ["SNLI", "MNLI"]:
+        if args.task_name in ["SNLI", "MNLI", "CLASSIFICATION"]:
           selected_id = int(selected_id)
         elif args.task_name == "WINOGRANDE":
           selected_id = str(int(selected_id))
@@ -361,7 +361,6 @@ if __name__ == "__main__":
   parser.add_argument("--task_name",
                       "-t",
                       default="WINOGRANDE",
-                      choices=("SNLI", "MNLI", "QNLI", "WINOGRANDE"),
                       help="Which task are we plotting or filtering for.")
   parser.add_argument('--metric',
                       choices=('threshold_closeness',

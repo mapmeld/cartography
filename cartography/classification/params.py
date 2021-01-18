@@ -145,6 +145,10 @@ class Params:
       self.server_ip : str = configs.get("server_ip", "")
       self.server_port : str = configs.get("server_port", "")
 
+      self.split : str = configs.get("split", "")
+      self.text_a : str = configs.get("text_a", "")
+      self.text_b : str = configs.get("text_b", "")
+
 
 def save_args_to_file(params: Params, mode: str = ""):
   """

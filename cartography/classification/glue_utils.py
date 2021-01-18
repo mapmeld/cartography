@@ -107,7 +107,7 @@ def adapted_glue_convert_examples_to_features(
         if ex_index % 10000 == 0:
             logger.info("Writing example %d/%d" % (ex_index, len_examples))
 
-        inputs = tokenizer.encode_plus(example.text_a, example.text_b, add_special_tokens=True, max_length=max_length,)
+        inputs = tokenizer.encode_plus(example['text_a'], example['text_b'], add_special_tokens=True, max_length=max_length,)
         input_ids, token_type_ids = inputs["input_ids"], inputs["token_type_ids"]
 
         # The mask has 1 for real tokens and 0 for padding tokens. Only real
@@ -134,20 +134,20 @@ def adapted_glue_convert_examples_to_features(
         )
 
         if output_mode == "classification":
-            label = label_map[example.label]
+            label = example['label']
         elif output_mode == "regression":
-            label = float(example.label)
+            label = float(example['label'])
         else:
             raise KeyError(output_mode)
 
-        example_int_id = convert_string_to_unique_number(example.guid)
+        example_int_id = convert_string_to_unique_number(example['uid'][:10])
         if ex_index < 5:
             logger.info("*** Example ***")
             logger.info(f"guid: {example_int_id}")
             logger.info("input_ids: %s" % " ".join([str(x) for x in input_ids]))
             logger.info("attention_mask: %s" % " ".join([str(x) for x in attention_mask]))
             logger.info("token_type_ids: %s" % " ".join([str(x) for x in token_type_ids]))
-            logger.info("label: %s (id = %d)" % (example.label, label))
+            logger.info("label: %s (id = %d)" % (example['label'], label))
 
         features.append(
             AdaptedInputFeatures(input_ids=input_ids,

@@ -59,6 +59,7 @@ from cartography.classification.params import Params, save_args_to_file
 
 from cartography.selection.selection_utils import log_training_dynamics
 
+import datasets
 
 try:
     from torch.utils.tensorboard import SummaryWriter
@@ -478,26 +479,31 @@ def evaluate(args, model, tokenizer, prefix="", eval_split="dev"):
 
 
 def load_dataset(args, task, eval_split="train"):
-    processor = processors[task]()
-    if eval_split == "train":
-        if args.train is None:
-            examples = processor.get_train_examples(args.data_dir)
-        else:
-            examples = processor.get_examples(args.train, "train")
-    elif "dev" in eval_split:
-        if args.dev is None:
-            examples = processor.get_dev_examples(args.data_dir)
-        else:
-            examples = processor.get_examples(args.dev, "dev")
-    elif "test" in eval_split:
-        if args.test is None:
-            examples = processor.get_test_examples(args.data_dir)
-        else:
-            examples = processor.get_examples(args.test, "test")
-    else:
-        raise ValueError(f"eval_split should be train / dev / test, but was given {eval_split}")
-
-    return examples
+    ds = datasets.load_dataset(args.model_name_or_path, split=args.split)
+    ds.rename_column_("hypothesis", args.text_a)
+    ds.rename_column_("premise", args.text_b)
+    return ds
+    #
+    # processor = processors[task]()
+    # if eval_split == "train":
+    #     if args.train is None:
+    #         examples = processor.get_train_examples(args.data_dir)
+    #     else:
+    #         examples = processor.get_examples(args.train, "train")
+    # elif "dev" in eval_split:
+    #     if args.dev is None:
+    #         examples = processor.get_dev_examples(args.data_dir)
+    #     else:
+    #         examples = processor.get_examples(args.dev, "dev")
+    # elif "test" in eval_split:
+    #     if args.test is None:
+    #         examples = processor.get_test_examples(args.data_dir)
+    #     else:
+    #         examples = processor.get_examples(args.test, "test")
+    # else:
+    #     raise ValueError(f"eval_split should be train / dev / test, but was given {eval_split}")
+    #
+    # return examples
 
 
 def get_winogrande_tensors(features):
@@ -779,6 +785,9 @@ def main():
     parser.add_argument("--test",
                         type=os.path.abspath,
                         help="OOD test set.")
+    parser.add_argument("--text_a")
+    parser.add_argument("--text_b")
+    parser.add_argument("--split")
 
     # TODO(SS): Automatically map tasks to OOD test sets.
 

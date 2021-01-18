@@ -117,6 +117,8 @@ def compute_train_dy_metrics(training_dynamics, args):
       training_accuracy[i] += is_correct
       logits[i].append(epoch_logits)
       targets[i].append(record["gold"])
+      if i + 1 >= len(logits):
+        break
 
     if args.burn_out < num_tot_epochs:
       correctness_trend = correctness_trend[:args.burn_out]

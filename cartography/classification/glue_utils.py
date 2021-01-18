@@ -190,7 +190,7 @@ def adapted_glue_convert_examples_to_features(
             ),
         )
 
-    return features
+    return features, known_classes
 
 
 def adapted_glue_compute_metrics(task_name, preds, labels):

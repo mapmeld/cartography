@@ -705,7 +705,9 @@ def run_transformer(args):
             os.makedirs(args.output_dir)
             save_args_to_file(args, mode="train")
 
-        train_dataset = load_and_cache_examples(args, tname, tokenizer, evaluate=False)
+        train_dataset, known_classes = load_and_cache_examples(args, tname, tokenizer, evaluate=False)
+        if args.task_name == "CLASSIFICATION":
+            model.config.num_lanels = len(known_classes.keys())
         global_step, tr_loss = train(args, train_dataset, model, tokenizer)
         logger.info(f" global_step = {global_step}, average loss = {tr_loss:.4f}")
 

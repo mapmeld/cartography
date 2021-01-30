@@ -32,10 +32,12 @@ args = parser.parse_args()
 print('downloading dataset...')
 from datasets import load_dataset
 dataset = load_dataset(args.dataset, split=args.split)
+del dataset
 
 print('downloading model...')
 from transformers import AutoModel
 model = AutoModel.from_pretrained(args.model)
+del model
 
 print('creating config...')
 open('myconfig.jsonnet', 'w').write("""
